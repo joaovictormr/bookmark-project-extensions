@@ -1,0 +1,80 @@
+{
+  "extName": {
+    "message": "StashMine"
+  },
+  "extDescription": {
+    "message": "Save the page you're on to StashMine in one click, to find it again later."
+  },
+  "actionTitle": {
+    "message": "Save to StashMine"
+  },
+  "shortcutDescription": {
+    "message": "Save this page to StashMine"
+  },
+  "menuSavePage": {
+    "message": "Save page to StashMine"
+  },
+  "menuSaveLink": {
+    "message": "Save link to StashMine"
+  },
+  "cantSaveThisPage": {
+    "message": "This page can't be saved"
+  },
+  "saved": {
+    "message": "Saved"
+  },
+  "alreadySaved": {
+    "message": "Already in your saves"
+  },
+  "couldntReach": {
+    "message": "Couldn't reach StashMine. Check your connection and try again."
+  },
+  "disconnect": {
+    "message": "Disconnect"
+  },
+  "savingTo": {
+    "message": "Saving to @$1"
+  },
+  "connectHeading": {
+    "message": "Connect your account"
+  },
+  "connectBody": {
+    "message": "Sign in on StashMine once, and this button saves any page to your list."
+  },
+  "connectButton": {
+    "message": "Connect"
+  },
+  "disconnectedBody": {
+    "message": "This browser was disconnected from your account. Connect it again to keep saving."
+  },
+  "cantSaveHeading": {
+    "message": "This page can't be saved"
+  },
+  "cantSaveBody": {
+    "message": "Only web pages can be saved, not the browser's own pages or files."
+  },
+  "permissionHeading": {
+    "message": "One more step"
+  },
+  "permissionBody": {
+    "message": "Allow the extension to reach $1, where your saves go."
+  },
+  "permissionButton": {
+    "message": "Allow"
+  },
+  "saving": {
+    "message": "Saving…"
+  },
+  "openStashMine": {
+    "message": "Open StashMine"
+  },
+  "limitHeading": {
+    "message": "Not saved"
+  },
+  "errorHeading": {
+    "message": "Not saved"
+  },
+  "tryAgain": {
+    "message": "Try again"
+  }
+}

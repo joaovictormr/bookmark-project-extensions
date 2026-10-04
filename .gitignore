@@ -1,0 +1,7 @@
+node_modules
+.output
+.wxt
+web-ext.config.ts
+.env.local
+*.zip
+.DS_Store

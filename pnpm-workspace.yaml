@@ -1,0 +1,6 @@
+# Its own workspace root, so pnpm doesn't treat this repo as part of the main repo it's usually cloned inside.
+packages: []
+
+onlyBuiltDependencies:
+  - esbuild
+  - spawn-sync

@@ -1,0 +1,80 @@
+{
+  "extName": {
+    "message": "StashMine"
+  },
+  "extDescription": {
+    "message": "Salve a página em que você está no StashMine com um clique, para achar de novo depois."
+  },
+  "actionTitle": {
+    "message": "Salvar no StashMine"
+  },
+  "shortcutDescription": {
+    "message": "Salvar esta página no StashMine"
+  },
+  "menuSavePage": {
+    "message": "Salvar página no StashMine"
+  },
+  "menuSaveLink": {
+    "message": "Salvar link no StashMine"
+  },
+  "cantSaveThisPage": {
+    "message": "Esta página não pode ser salva"
+  },
+  "saved": {
+    "message": "Salvo"
+  },
+  "alreadySaved": {
+    "message": "Já está nos seus salvos"
+  },
+  "couldntReach": {
+    "message": "Não foi possível falar com o StashMine. Verifique sua conexão e tente de novo."
+  },
+  "disconnect": {
+    "message": "Desconectar"
+  },
+  "savingTo": {
+    "message": "Salvando em @$1"
+  },
+  "connectHeading": {
+    "message": "Conecte sua conta"
+  },
+  "connectBody": {
+    "message": "Entre no StashMine uma vez, e este botão salva qualquer página na sua lista."
+  },
+  "connectButton": {
+    "message": "Conectar"
+  },
+  "disconnectedBody": {
+    "message": "Este navegador foi desconectado da sua conta. Conecte de novo para continuar salvando."
+  },
+  "cantSaveHeading": {
+    "message": "Esta página não pode ser salva"
+  },
+  "cantSaveBody": {
+    "message": "Só páginas da web podem ser salvas, não as páginas do próprio navegador nem arquivos."
+  },
+  "permissionHeading": {
+    "message": "Só mais um passo"
+  },
+  "permissionBody": {
+    "message": "Permita que a extensão acesse $1, onde ficam seus salvos."
+  },
+  "permissionButton": {
+    "message": "Permitir"
+  },
+  "saving": {
+    "message": "Salvando…"
+  },
+  "openStashMine": {
+    "message": "Abrir o StashMine"
+  },
+  "limitHeading": {
+    "message": "Não salvo"
+  },
+  "errorHeading": {
+    "message": "Não salvo"
+  },
+  "tryAgain": {
+    "message": "Tentar de novo"
+  }
+}
