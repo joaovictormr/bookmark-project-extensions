@@ -52,6 +52,8 @@ source of truth; read it rather than guessing. The original plan is in `../apps/
   | page → extension | `{ source: 'stashmine-web', type: 'ping' }` |
   | page → extension | `{ source: 'stashmine-web', type: 'connect', token, deviceId, username, server }` |
   | extension → page, once the token is stored | `{ source: 'stashmine-extension', type: 'connected', deviceId }` |
+  | page → extension, on sign-out | `{ source: 'stashmine-web', type: 'disconnect', deviceId }` |
+  | extension → page | `{ source: 'stashmine-extension', type: 'disconnected', deviceId }` |
 
   Accept a message only when `event.source === window`, `event.origin` is our origin and the shape matches; post
   with `targetOrigin` set to our origin, never `'*'`. `deviceId` in the hello is the device the extension was
@@ -60,6 +62,9 @@ source of truth; read it rather than guessing. The original plan is in `../apps/
   the new token if it doesn't come. A change to these messages bumps `protocol` on both sides. Guests are asked to
   sign in on the page. The token shows in the web app's Settings → Devices and is revocable there; it counts toward
   the 10 devices of an account.
+- **Signing out of the web app disconnects the extension in that browser (decided 2026-10-04):** the page removes the
+  key on the server, then sends `disconnect`; the extension forgets its key only if the `deviceId` matches. Added
+  without bumping `protocol`: an older extension ignores it and forgets the key on its next save (401).
 - **Token hygiene:** the token never goes into a log, an error, the popup's DOM or any request other than
   `/api/share`. Signing out of the extension forgets it locally (the web app's Devices list revokes it for real).
 

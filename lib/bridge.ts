@@ -13,10 +13,13 @@ export type BrowserName = 'chrome' | 'edge' | 'firefox' | 'safari' | 'other'
 export type ExtensionMessage =
   | { source: typeof EXTENSION_SOURCE; type: 'hello'; protocol: typeof PROTOCOL; browser: BrowserName; deviceId: string | null }
   | { source: typeof EXTENSION_SOURCE; type: 'connected'; deviceId: string }
+  | { source: typeof EXTENSION_SOURCE; type: 'disconnected'; deviceId: string }
 
 export type PageMessage =
   | { type: 'ping' }
   | { type: 'connect'; token: string; deviceId: string; username: string; server: string }
+  /** The account signed out on the page: forget this key (the page already removed it on the server). */
+  | { type: 'disconnect'; deviceId: string }
 
 const TOKEN_RE = /^stw_[A-Za-z0-9_-]{43}$/
 const USERNAME_RE = /^[a-z0-9_]{3,20}$/
@@ -31,14 +34,19 @@ export function readPageMessage(
   const data = event.data as Record<string, unknown> | null
   if (!data || typeof data !== 'object' || data.source !== WEB_SOURCE) return null
   if (data.type === 'ping') return { type: 'ping' }
-  if (data.type !== 'connect') return null
   const { token, deviceId, username, server } = data
+  if (data.type === 'disconnect') return isDeviceId(deviceId) ? { type: 'disconnect', deviceId } : null
+  if (data.type !== 'connect') return null
   if (typeof token !== 'string' || !TOKEN_RE.test(token)) return null
-  if (typeof deviceId !== 'string' || deviceId.length === 0 || deviceId.length > 64) return null
+  if (!isDeviceId(deviceId)) return null
   if (typeof username !== 'string' || !USERNAME_RE.test(username)) return null
   // A key made on another server would save there.
   if (server !== self.server) return null
   return { type: 'connect', token, deviceId, username, server }
+}
+
+function isDeviceId(value: unknown): value is string {
+  return typeof value === 'string' && value.length > 0 && value.length <= 64
 }
 
 /** The browser's name for the device label ("Chrome on Mac"). Edge, Brave and Opera run the Chrome build. */

@@ -19,6 +19,13 @@ describe('readPageMessage', () => {
     expect(readPageMessage(from(connect, { origin: 'https://evil.example' }), { ...self, origin: 'https://evil.example' })).toBeNull()
   })
 
+  it('reads a sign-out’s disconnect, with a well-formed device only', () => {
+    expect(readPageMessage(from({ source: WEB_SOURCE, type: 'disconnect', deviceId: 'dev-1' }), self)).toEqual({ type: 'disconnect', deviceId: 'dev-1' })
+    expect(readPageMessage(from({ source: WEB_SOURCE, type: 'disconnect', deviceId: '' }), self)).toBeNull()
+    expect(readPageMessage(from({ source: WEB_SOURCE, type: 'disconnect' }), self)).toBeNull()
+    expect(readPageMessage(from({ source: WEB_SOURCE, type: 'disconnect', deviceId: 'dev-1' }, { origin: 'https://evil.example' }), self)).toBeNull()
+  })
+
   it('refuses a key for another server', () => {
     expect(readPageMessage(from({ ...connect, server: 'https://evil.example' }), self)).toBeNull()
   })

@@ -14,7 +14,7 @@ decisions and conventions are in [`CLAUDE.md`](CLAUDE.md).
 | First install | Opens `stashmine.app/#/connect-extension` to connect the account |
 | Not connected (or the key was removed in Settings → Devices) | The popup offers **Connect**; a right-click save opens the connect page |
 
-The popup's footer shows the account ("Saving to @you") and **Disconnect**, which forgets the key in this browser (it
+Signing out of the web app in that browser disconnects the extension too (other browsers stay connected). The popup's footer shows the account ("Saving to @you") and **Disconnect**, which forgets the key in this browser (it
 stays in the web app's Settings → Devices until removed there). Texts are in English and Brazilian Portuguese, picked
 by the browser's language.
 
