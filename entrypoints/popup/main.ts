@@ -113,9 +113,9 @@ async function saveCurrentTab() {
     case 'unauthorized':
       return showConnect(t('disconnectedBody'))
     case 'saved':
-      return render({ icon: '✓', ok: true, heading: t('saved'), pageTitle: result.title ?? tab.title, action: open, account: connection })
+      return render({ icon: '✓', ok: true, heading: t('saved'), pageTitle: tab.title || result.title, action: open, account: connection })
     case 'duplicate':
-      return render({ icon: '✓', ok: true, heading: t('alreadySaved'), pageTitle: result.title ?? tab.title, action: open, account: connection })
+      return render({ icon: '✓', ok: true, heading: t('alreadySaved'), pageTitle: tab.title || result.title, action: open, account: connection })
     case 'limit':
       return render({ icon: '⏳', heading: t('limitHeading'), body: result.message, action: open, account: connection })
     case 'error':

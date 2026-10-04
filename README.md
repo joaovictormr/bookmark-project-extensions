@@ -10,7 +10,7 @@ decisions and conventions are in [`CLAUDE.md`](CLAUDE.md).
 | How | What happens |
 |---|---|
 | Toolbar button, or **Alt+Shift+S** | The popup opens and saves the current tab right away: **Saved**, **Already in your saves**, a plan limit, or an error with **Try again** |
-| Right-click → **Save page to StashMine** / **Save link to StashMine** | Saves without opening anything; the toolbar button shows ✓ or ! for 4 seconds, with the outcome as its tooltip |
+| Right-click → **Save page to StashMine** / **Save link to StashMine** | Saves without opening anything; a small **Saved** (or the error) appears in the page's bottom-right corner for 3.5 seconds, and the toolbar button shows ✓ or ! for 4 |
 | First install | Opens `stashmine.app/#/connect-extension` to connect the account |
 | Not connected (or the key was removed in Settings → Devices) | The popup offers **Connect**; a right-click save opens the connect page |
 
@@ -64,6 +64,7 @@ lib/
 ├── share.ts             ← POST /api/share and what its answers mean
 ├── save.ts              ← saves to the connected account; forgets a key the server no longer knows
 ├── urls.ts              ← which tabs can be saved (web pages only)
+├── toast.ts             ← the message a right-click save draws on the page (self-contained, injected)
 ├── server.ts, config.ts ← the build's server and its match pattern
 └── i18n.ts              ← texts from public/_locales
 public/
@@ -79,6 +80,7 @@ decides what happens to data gets tests; the popup and background are thin wirin
 ## Permissions
 
 `activeTab` (the current tab's address, only when you click, use the shortcut or the menu), `contextMenus`, `storage`,
+`scripting` (to draw a right-click save's message on that one tab; no install warning),
 and host access to the build's server only. Firefox can leave the host access off at install; the popup then asks
 for it with an **Allow** button.
 

@@ -16,7 +16,8 @@ export default defineConfig({
       description: '__MSG_extDescription__',
       default_locale: 'en',
       // activeTab: the current tab's address, only when the person clicks, uses the shortcut or the right-click menu.
-      permissions: ['activeTab', 'contextMenus', 'storage'],
+      // scripting: the "Saved" message a right-click save draws on the page (activeTab limits it to that tab).
+      permissions: ['activeTab', 'contextMenus', 'scripting', 'storage'],
       // Only our own site: the API calls and the connect page's content script.
       host_permissions: [matchPatternFor(server)],
       commands: {

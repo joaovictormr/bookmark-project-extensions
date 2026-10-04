@@ -22,7 +22,8 @@ source of truth; read it rather than guessing. The original plan is in `../apps/
   reached, connect your account, error). Add Preact/React only if the UI grows past that.
 - **Saving (decided 2026-10-04; built):** opening the popup saves the current tab at once (no "Save" button to
   click); the keyboard shortcut (Alt+Shift+S) is `_execute_action`, so it does the same. The right-click menu saves
-  without a popup and shows ✓ or ! on the toolbar button for 4 s. A first install opens the connect page.
+  without a popup; it draws a small message on the page (`lib/toast.ts`, injected with `scripting` through the menu
+  click's `activeTab`, in a closed shadow root) and shows ✓ or ! on the toolbar button for 4 s. A first install opens the connect page.
 - **Server per build (decided 2026-10-04; built):** development builds save to `http://localhost:5173`, others to
   `https://stashmine.app`, `WXT_SERVER_URL` overrides (`lib/server.ts`); host permission, the content script's
   `matches` and the API calls all follow it, and a stored key is used only on the server it was made on.
@@ -70,7 +71,8 @@ source of truth; read it rather than guessing. The original plan is in `../apps/
 
 ## Permissions (keep them minimal; every one needs a justification in the stores)
 
-- `activeTab`, `contextMenus`, `storage`, `notifications` only if a toast is really needed.
+- `activeTab`, `contextMenus`, `scripting` (the right-click save's message on the page), `storage`. No
+  `notifications`: the on-page message does the job without another permission.
 - Host permission only for `https://stashmine.app/*` (the API calls and the connect content script). Never
   `<all_urls>` or broad host permissions: they trigger scary install warnings and slower store reviews.
 - No remote code: everything ships in the bundle (MV3 forbids it anyway).
