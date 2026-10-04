@@ -36,9 +36,12 @@ export default defineConfig({
   }),
   hooks: {
     // The connect content script runs on the build's server only (its `matches` in the entrypoint is a placeholder).
-    'build:manifestGenerated': (wxt, manifest) => {
+    // Set on the entrypoint, not the manifest: development builds register content scripts at run time from it.
+    'entrypoints:resolved': (wxt, entrypoints) => {
       const pattern = matchPatternFor(serverFor(wxt.config.mode, process.env.WXT_SERVER_URL))
-      for (const script of manifest.content_scripts ?? []) script.matches = [pattern]
+      for (const entrypoint of entrypoints) {
+        if (entrypoint.type === 'content-script') entrypoint.options.matches = [pattern]
+      }
     },
   },
 })
