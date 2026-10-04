@@ -26,9 +26,19 @@ export default defineConfig({
           description: '__MSG_shortcutDescription__',
         },
       },
-      // Firefox needs a fixed id (Chrome warns about the key, so only its build has it).
+      // Firefox needs a fixed id, and Firefox Add-ons asks new extensions what data they send (Firefox 140+): the
+      // address (browsingActivity) and title (websiteContent) of a page the person chose to save. Chrome warns about
+      // the key, so only the Firefox build has it.
       ...(browser === 'firefox' && {
-        browser_specific_settings: { gecko: { id: 'extension@stashmine.app', strict_min_version: '128.0' } },
+        browser_specific_settings: {
+          gecko: {
+            id: 'extension@stashmine.app',
+            strict_min_version: '140.0',
+            data_collection_permissions: { required: ['browsingActivity', 'websiteContent'] },
+          },
+          // Firefox for Android reads that declaration from 142.
+          gecko_android: { strict_min_version: '142.0' },
+        },
       }),
     }
   },

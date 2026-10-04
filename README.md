@@ -37,6 +37,7 @@ To load a build in your own browser instead:
 - **Chrome / Edge / Brave:** `pnpm build`, then `chrome://extensions` → turn on **Developer mode** → **Load
   unpacked** → pick `.output/chrome-mv3`. For a build against the local web app: `pnpm build --mode development`
   and pick `.output/chrome-mv3-dev`.
+- **Safari:** see Not built yet below.
 - **Firefox:** `pnpm build:firefox`, then `about:debugging#/runtime/this-firefox` → **Load Temporary Add-on** → pick
   any file in `.output/firefox-mv3`. It's removed when Firefox closes.
 
@@ -89,9 +90,14 @@ for it with an **Allow** button.
 - **Tried by hand in a browser:** the connect flow, saving, the badge and the Firefox permission prompt have only been
   checked by the tests and the builds so far. Firefox's `event.source === window` check in the content script in
   particular needs a real run.
-- **Safari:** `wxt build -b safari` plus `xcrun safari-web-extension-converter`, and where the Xcode project lives
-  (an open question in `CLAUDE.md`).
-- **Stores:** listings, screenshots, the privacy policy link (`https://stashmine.app/privacy`), a reason for each
-  permission, and Firefox's `data_collection_permissions` in the manifest (Firefox Add-ons asks for it on new
-  extensions). `pnpm zip` / `pnpm zip:firefox` make the uploads (Firefox also wants the source zip WXT makes).
+- **Safari:** the code runs as it is; what's missing is the app that carries it. Tried 2026-10-04 (Xcode 26.6):
+  `pnpm build:safari`, then `xcrun safari-web-extension-packager .output/safari-mv3 --app-name StashMine
+  --bundle-identifier … --swift --copy-resources` makes an Xcode project (a Mac app and an iPhone app, each with the
+  extension inside), and both compiled unsigned. Not run in Safari yet, and where the project lives is open
+  (`CLAUDE.md` → Open questions).
+- **Stores:** listings, screenshots, the privacy policy link (`https://stashmine.app/privacy`, which covers the
+  extension) and a reason for each permission. The Firefox build already declares what it sends
+  (`data_collection_permissions`: `browsingActivity` and `websiteContent`, which needs Firefox 140, or 142 on Android);
+  `pnpm lint:firefox` runs Mozilla's store linter on it. `pnpm zip` / `pnpm zip:firefox` make the uploads (Firefox
+  also wants the source zip WXT makes).
 - **CI** (`pnpm check` on every push) and a pre-commit hook like the main repo's.

@@ -27,7 +27,10 @@ source of truth; read it rather than guessing. The original plan is in `../apps/
 - **Server per build (decided 2026-10-04; built):** development builds save to `http://localhost:5173`, others to
   `https://stashmine.app`, `WXT_SERVER_URL` overrides (`lib/server.ts`); host permission, the content script's
   `matches` and the API calls all follow it, and a stored key is used only on the server it was made on.
-- **Manifest V3 for Firefox too** (`manifestVersion: 3` in `wxt.config.ts`; WXT would build V2), Firefox 128+.
+- **Manifest V3 for Firefox too** (`manifestVersion: 3` in `wxt.config.ts`; WXT would build V2), Firefox 140+ (142 on
+  Android), because the Firefox build declares the data it sends, as Firefox Add-ons requires of new extensions:
+  `data_collection_permissions.required: ['browsingActivity', 'websiteContent']` (a saved page's address and title).
+  Change it whenever the extension starts sending anything else, and the main repo's privacy policy with it.
 - **The popup uses the web app's light palette**, the app's default theme.
 - **Order of browsers:** Chrome (covers Edge, Brave, Opera, Arc with the same build) → Firefox → Safari last
   (Xcode wrapper and App Store review).
@@ -112,5 +115,16 @@ Chrome Web Store (US$5 once, also covers people on Edge/Brave/Opera who install 
 
 ## Open questions
 
-- **Safari packaging:** its own small macOS app in this repo, or a target in the main repo's Xcode project
-  (`apps/mobile`), which would also bring it to Safari on iPhone. Decide when Chrome and Firefox are out.
+- **Safari packaging (looked at 2026-10-04).** Safari runs the same code; it ships inside an app made with
+  `xcrun safari-web-extension-packager .output/safari-mv3` (Xcode 26; a test project compiled for Mac and iPhone
+  unsigned). Where that app lives:
+  - **iPhone and iPad: a target in the main repo's iOS app** (`apps/mobile`, recommended). People install one
+    StashMine app and get the share sheet and the Safari extension; a second iPhone app with the same name would
+    confuse them and App Review. The extension still connects through `#/connect-extension` and keeps its key in its
+    own storage, like in the other browsers (it doesn't use the app's keychain).
+  - **Mac: its own small macOS app** (the packager's Mac target, in this repo), since a Safari extension for Mac comes in a
+    Mac app (an iPhone app running on a Mac isn't known to carry one; check before deciding). Its only screen tells people to turn the extension on in Safari → Settings →
+    Extensions. Sold as the same product as the iPhone app if App Store Connect allows it (universal purchase).
+  - Watch: Safari asks people to allow the extension per website (the popup must handle "no access yet"), iPhone
+    Safari has no right-click menu or keyboard shortcuts (the toolbar popup only), and developers report popups that
+    don't open on iOS 26 for some converted extensions, so test on a real iPhone early.
