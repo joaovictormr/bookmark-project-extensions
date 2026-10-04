@@ -26,7 +26,9 @@ pnpm dev            # Chrome, against http://localhost:5173 (the main repo's `pn
 pnpm dev:firefox    # the same in Firefox
 ```
 
-`pnpm dev` opens a browser with the extension loaded and reloads it as you edit. Start the main repo's `pnpm dev`
+`pnpm dev` opens a browser with the extension loaded and reloads it as you edit (through `web-ext`, a dev dependency:
+WXT no longer includes it, and without it nothing opens). It's a fresh browser profile each time, so you sign in to
+the web app there. Start the main repo's `pnpm dev`
 first so the web app (and its `/api` proxy) is on `localhost:5173`, sign in there with an account (not a guest), then
 click **Connect** in the popup.
 
