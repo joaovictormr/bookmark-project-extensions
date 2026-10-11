@@ -37,6 +37,13 @@ source of truth; read it rather than guessing. The original plan is in `../apps/
   `data_collection_permissions.required: ['browsingActivity', 'websiteContent']` (a saved page's address and title).
   Change it whenever the extension starts sending anything else, and the main repo's privacy policy with it.
 - **The popup uses the web app's light palette**, the app's default theme.
+- **Safari on iPhone and iPad ships inside the main repo's iOS app (decided and built 2026-10-11).** A
+  `SafariExtension` target in `../apps/mobile` (`app.stashmine.SafariExtension`) carries this repo's
+  `pnpm build:safari` output: `pnpm safari:sync` there builds this repo and copies `.output/safari-mv3/` into the
+  target's `Resources/`, which the main repo commits. So a change here reaches Safari only after that copy and an app
+  release. **A new top-level folder in the build** (WXT adds `chunks/`, `assets/`…) must be added to that target's
+  kept folders (`explicitFolders`), or its files land flat and break the extension; the sync script refuses until it
+  is. It keeps its key in its own storage, like the other browsers. Safari on the Mac: still open, below.
 - **Order of work:** Chrome (covers Edge, Brave, Opera, Arc with the same build) → Firefox → Safari last
   (Xcode wrapper and App Store review). All three must be ready by launch day (Launch together above).
 
@@ -122,8 +129,8 @@ each store's option for holding an approved release; App Store Connect has manua
 
 ## Open questions
 
-- **Safari packaging (looked at 2026-10-04; needed before launch, since Safari ships with the iPhone app).** Safari
-  runs the same code; it ships inside an app made with
+- **Safari packaging on the Mac (looked at 2026-10-04; needed before launch, since Safari ships with the iPhone app;
+  iPhone and iPad settled 2026-10-11, see Decisions).** Safari runs the same code; it ships inside an app made with
   `xcrun safari-web-extension-packager .output/safari-mv3` (Xcode 26; a test project compiled for Mac and iPhone
   unsigned). Where that app lives:
   - **iPhone and iPad: a target in the main repo's iOS app** (`apps/mobile`, recommended). People install one
