@@ -10,8 +10,13 @@ source of truth; read it rather than guessing. The original plan is in `../apps/
 
 ## Decisions
 
+- **Launch together (decided 2026-10-10):** the extension is required for launch, not a later add-on. The first
+  public release goes out the same day as the website and the iPhone app (main repo's `CLAUDE.md` → Launch), in all
+  three stores: Chrome Web Store, Firefox Add-ons and Safari. **Safari is tied to the iPhone app's release:** both go
+  through App Store review, so Safari ships when the iPhone app does. Later releases follow their own schedule.
 - **Separate repo (decided 2026-10-04):** not `apps/extension` in the main monorepo, as first planned. The extension
-  ships on its own schedule through the stores, so it has its own history, CI and releases.
+  ships on its own schedule through the stores, so it has its own history, CI and releases (the first release excepted:
+  see Launch together above).
 - **One codebase for every browser.** Chrome, Edge, Brave, Opera, Arc and Firefox all run the same WebExtensions
   API (Manifest V3); Safari runs it too, wrapped in an Xcode app. Browser differences stay in a few small, named
   places, never in forks of the code.
@@ -27,10 +32,13 @@ source of truth; read it rather than guessing. The original plan is in `../apps/
 - **Server per build (decided 2026-10-04; built):** development builds save to `http://localhost:5173`, others to
   `https://stashmine.app`, `WXT_SERVER_URL` overrides (`lib/server.ts`); host permission, the content script's
   `matches` and the API calls all follow it, and a stored key is used only on the server it was made on.
-- **Manifest V3 for Firefox too** (`manifestVersion: 3` in `wxt.config.ts`; WXT would build V2), Firefox 128+.
+- **Manifest V3 for Firefox too** (`manifestVersion: 3` in `wxt.config.ts`; WXT would build V2), Firefox 140+ (142 on
+  Android), because the Firefox build declares the data it sends, as Firefox Add-ons requires of new extensions:
+  `data_collection_permissions.required: ['browsingActivity', 'websiteContent']` (a saved page's address and title).
+  Change it whenever the extension starts sending anything else, and the main repo's privacy policy with it.
 - **The popup uses the web app's light palette**, the app's default theme.
-- **Order of browsers:** Chrome (covers Edge, Brave, Opera, Arc with the same build) → Firefox → Safari last
-  (Xcode wrapper and App Store review).
+- **Order of work:** Chrome (covers Edge, Brave, Opera, Arc with the same build) → Firefox → Safari last
+  (Xcode wrapper and App Store review). All three must be ready by launch day (Launch together above).
 
 ## How it works
 
@@ -104,13 +112,27 @@ source of truth; read it rather than guessing. The original plan is in `../apps/
 - When a change here needs something in the main repo (API, web app, docs), say so and update the main repo's
   `apps/api/TODO.md` → browser extension.
 
-## Stores (later)
+## Stores (required for launch)
 
-Chrome Web Store (US$5 once, also covers people on Edge/Brave/Opera who install from it), Microsoft Edge Add-ons
-(free, optional), Firefox Add-ons (free), Safari through the App Store. Each needs screenshots, the privacy policy
-(`https://stashmine.app/privacy`) and a reason for every permission.
+Chrome Web Store (US$5 once, also covers people on Edge/Brave/Opera who install from it), Firefox Add-ons (free),
+Safari through the App Store; Microsoft Edge Add-ons (free) is optional. Each needs screenshots, the privacy policy
+(`https://stashmine.app/privacy`) and a reason for every permission. Submit early enough that every review is done
+before launch day, and keep each approved version from going public until the website and the iPhone app do (check
+each store's option for holding an approved release; App Store Connect has manual release).
 
 ## Open questions
 
-- **Safari packaging:** its own small macOS app in this repo, or a target in the main repo's Xcode project
-  (`apps/mobile`), which would also bring it to Safari on iPhone. Decide when Chrome and Firefox are out.
+- **Safari packaging (looked at 2026-10-04; needed before launch, since Safari ships with the iPhone app).** Safari
+  runs the same code; it ships inside an app made with
+  `xcrun safari-web-extension-packager .output/safari-mv3` (Xcode 26; a test project compiled for Mac and iPhone
+  unsigned). Where that app lives:
+  - **iPhone and iPad: a target in the main repo's iOS app** (`apps/mobile`, recommended). People install one
+    StashMine app and get the share sheet and the Safari extension; a second iPhone app with the same name would
+    confuse them and App Review. The extension still connects through `#/connect-extension` and keeps its key in its
+    own storage, like in the other browsers (it doesn't use the app's keychain).
+  - **Mac: its own small macOS app** (the packager's Mac target, in this repo), since a Safari extension for Mac comes in a
+    Mac app (an iPhone app running on a Mac isn't known to carry one; check before deciding). Its only screen tells people to turn the extension on in Safari → Settings →
+    Extensions. Sold as the same product as the iPhone app if App Store Connect allows it (universal purchase).
+  - Watch: Safari asks people to allow the extension per website (the popup must handle "no access yet"), iPhone
+    Safari has no right-click menu or keyboard shortcuts (the toolbar popup only), and developers report popups that
+    don't open on iOS 26 for some converted extensions, so test on a real iPhone early.
