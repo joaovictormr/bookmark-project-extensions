@@ -1,7 +1,7 @@
 # StashMine browser extension
 
 Saves the page you're on to [StashMine](https://stashmine.app) in one click. One codebase for Chrome, Edge, Brave,
-Opera, Arc and Firefox (Safari later), built with [WXT](https://wxt.dev). The product, API and web app are in the main
+Opera, Arc and Firefox (Safari ships with the iPhone app), built with [WXT](https://wxt.dev). The product, API and web app are in the main
 repo, `joaovictormr/bookmark-project`; this repo is usually cloned inside it as `bookmark-project-extensions/`. Design
 decisions and conventions are in [`CLAUDE.md`](CLAUDE.md).
 
@@ -95,7 +95,8 @@ for it with an **Allow** button.
   --bundle-identifier … --swift --copy-resources` makes an Xcode project (a Mac app and an iPhone app, each with the
   extension inside), and both compiled unsigned. Not run in Safari yet, and where the project lives is open
   (`CLAUDE.md` → Open questions).
-- **Stores:** listings, screenshots, the privacy policy link (`https://stashmine.app/privacy`, which covers the
+- **Stores** (required for launch; the extension goes public in all three stores the same day as the website and
+  the iPhone app, `CLAUDE.md` → Decisions): listings, screenshots, the privacy policy link (`https://stashmine.app/privacy`, which covers the
   extension) and a reason for each permission. The Firefox build already declares what it sends
   (`data_collection_permissions`: `browsingActivity` and `websiteContent`, which needs Firefox 140, or 142 on Android);
   `pnpm lint:firefox` runs Mozilla's store linter on it. `pnpm zip` / `pnpm zip:firefox` make the uploads (Firefox
