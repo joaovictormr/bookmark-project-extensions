@@ -37,7 +37,7 @@ To load a build in your own browser instead:
 - **Chrome / Edge / Brave:** `pnpm build`, then `chrome://extensions` → turn on **Developer mode** → **Load
   unpacked** → pick `.output/chrome-mv3`. For a build against the local web app: `pnpm build --mode development`
   and pick `.output/chrome-mv3-dev`.
-- **Safari:** see Not built yet below.
+- **Safari:** in the main repo, `pnpm safari:sync` in `apps/mobile` builds this repo for Safari and copies it into the iPhone app; run the app from Xcode, then turn the extension on in Settings → Apps → Safari → Extensions.
 - **Firefox:** `pnpm build:firefox`, then `about:debugging#/runtime/this-firefox` → **Load Temporary Add-on** → pick
   any file in `.output/firefox-mv3`. It's removed when Firefox closes.
 
@@ -90,7 +90,9 @@ for it with an **Allow** button.
 - **Tried by hand in a browser:** the connect flow, saving, the badge and the Firefox permission prompt have only been
   checked by the tests and the builds so far. Firefox's `event.source === window` check in the content script in
   particular needs a real run.
-- **Safari:** the code runs as it is; what's missing is the app that carries it. Tried 2026-10-04 (Xcode 26.6):
+- **Safari:** on iPhone and iPad it ships inside the main repo's iOS app (its `SafariExtension` target, filled by
+  `pnpm safari:sync` in `../apps/mobile`, since 2026-10-11); not run in Safari yet. The Mac is open. Tried 2026-10-04
+  (Xcode 26.6):
   `pnpm build:safari`, then `xcrun safari-web-extension-packager .output/safari-mv3 --app-name StashMine
   --bundle-identifier … --swift --copy-resources` makes an Xcode project (a Mac app and an iPhone app, each with the
   extension inside), and both compiled unsigned. Not run in Safari yet, and where the project lives is open
