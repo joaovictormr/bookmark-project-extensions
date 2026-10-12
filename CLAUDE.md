@@ -10,10 +10,11 @@ source of truth; read it rather than guessing. The original plan is in `../apps/
 
 ## Decisions
 
-- **Launch together (decided 2026-10-10):** the extension is required for launch, not a later add-on. The first
-  public release goes out the same day as the website and the iPhone app (main repo's `CLAUDE.md` → Launch), in all
-  three stores: Chrome Web Store, Firefox Add-ons and Safari. **Safari is tied to the iPhone app's release:** both go
-  through App Store review, so Safari ships when the iPhone app does. Later releases follow their own schedule.
+- **Launch together (decided 2026-10-10, order revised 2026-10-12):** the extension is required for launch, not a
+  later add-on. Chrome and Firefox go public the same day as the website. **Safari is tied to the iPhone app's
+  release:** both go through App Store review, and they're submitted only after the website is live (reviewers must
+  connect the extension on the real site, not the Coming soon page), so Safari ships when the iPhone app is approved
+  (main repo's `CLAUDE.md` → Launch). Later releases follow their own schedule.
 - **Separate repo (decided 2026-10-04):** not `apps/extension` in the main monorepo, as first planned. The extension
   ships on its own schedule through the stores, so it has its own history, CI and releases (the first release excepted:
   see Launch together above).
@@ -123,9 +124,9 @@ source of truth; read it rather than guessing. The original plan is in `../apps/
 
 Chrome Web Store (US$5 once, also covers people on Edge/Brave/Opera who install from it), Firefox Add-ons (free),
 Safari through the App Store; Microsoft Edge Add-ons (free) is optional. Each needs screenshots, the privacy policy
-(`https://stashmine.app/privacy`) and a reason for every permission. Submit early enough that every review is done
-before launch day, and keep each approved version from going public until the website and the iPhone app do (check
-each store's option for holding an approved release; App Store Connect has manual release).
+(`https://stashmine.app/privacy`) and a reason for every permission. Submit Chrome and Firefox early enough that their reviews
+are done before launch day, and keep each approved version from going public until the website does (check each
+store's option for holding an approved release). Safari is submitted with the iPhone app after the website is live.
 
 ## Open questions
 
