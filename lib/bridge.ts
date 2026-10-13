@@ -12,7 +12,11 @@ export type BrowserName = 'chrome' | 'edge' | 'firefox' | 'safari' | 'other'
 
 export type ExtensionMessage =
   | { source: typeof EXTENSION_SOURCE; type: 'hello'; protocol: typeof PROTOCOL; browser: BrowserName; deviceId: string | null }
-  | { source: typeof EXTENSION_SOURCE; type: 'connected'; deviceId: string }
+  /**
+   * `shortcut`: the keys that save a page ("Alt+Shift+S"), for the page to mention; null when there are none. Added
+   * without bumping `protocol`: the page treats it as optional.
+   */
+  | { source: typeof EXTENSION_SOURCE; type: 'connected'; deviceId: string; shortcut: string | null }
   | { source: typeof EXTENSION_SOURCE; type: 'disconnected'; deviceId: string }
 
 export type PageMessage =
