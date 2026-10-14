@@ -2,6 +2,7 @@ import { defineContentScript } from 'wxt/utils/define-content-script'
 import { browserName, EXTENSION_SOURCE, PROTOCOL, readPageMessage, type ExtensionMessage } from '../lib/bridge'
 import { SERVER } from '../lib/config'
 import { clearConnection, getConnection, setConnection } from '../lib/connection'
+import { storedShortcut } from '../lib/shortcut'
 
 /**
  * Runs on our own site only (wxt.config.ts sets `matches` to the build's server) and does one thing: receives the
@@ -37,7 +38,7 @@ export default defineContentScript({
       }
       const { token, deviceId, username, server } = message
       await setConnection({ token, deviceId, username, server })
-      post({ source: EXTENSION_SOURCE, type: 'connected', deviceId })
+      post({ source: EXTENSION_SOURCE, type: 'connected', deviceId, shortcut: await storedShortcut() })
     })
 
     void hello()

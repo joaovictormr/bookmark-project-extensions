@@ -3,6 +3,7 @@ import { defineBackground } from 'wxt/utils/define-background'
 import { CONNECT_URL } from '../lib/config'
 import { t } from '../lib/i18n'
 import { saveToAccount } from '../lib/save'
+import { readShortcut, storeShortcut, titleWithShortcut } from '../lib/shortcut'
 import { showToast, TOAST_MS, type ToastKind } from '../lib/toast'
 import { isSavable } from '../lib/urls'
 
@@ -16,6 +17,11 @@ const BADGE_MS = 4000
  * keyboard shortcut open the popup, which saves on its own (entrypoints/popup).
  */
 export default defineBackground(() => {
+  // The tooltip names the keyboard shortcut. Read each time the worker starts (people change it in the browser's
+  // shortcut settings; only Firefox says when), and kept for the connect page.
+  void refreshTitle()
+  ;(browser.commands as { onChanged?: { addListener: (listener: () => void) => void } }).onChanged?.addListener(() => void refreshTitle())
+
   browser.runtime.onInstalled.addListener(({ reason }) => {
     browser.contextMenus.removeAll().then(() => {
       browser.contextMenus.create({ id: MENU_PAGE, title: t('menuSavePage'), contexts: ['page'] })
@@ -61,6 +67,18 @@ function badge(tabId: number, kind: ToastKind, title: string) {
   void browser.action.setTitle({ tabId, title })
   setTimeout(() => {
     void browser.action.setBadgeText({ tabId, text: '' })
-    void browser.action.setTitle({ tabId, title: t('actionTitle') })
+    void actionTitle().then((title) => browser.action.setTitle({ tabId, title }))
   }, BADGE_MS)
+}
+
+/** "Save to StashMine (Alt+Shift+S)", or without the keys when there's no shortcut. */
+async function actionTitle(): Promise<string> {
+  return titleWithShortcut(t('actionTitle'), await readShortcut())
+}
+
+/** Puts the shortcut in the toolbar button's tooltip and remembers it for the connect page. */
+async function refreshTitle() {
+  const shortcut = await readShortcut()
+  await storeShortcut(shortcut)
+  await browser.action.setTitle({ title: titleWithShortcut(t('actionTitle'), shortcut) })
 }

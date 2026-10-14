@@ -30,6 +30,11 @@ source of truth; read it rather than guessing. The original plan is in `../apps/
   click); the keyboard shortcut (Alt+Shift+S) is `_execute_action`, so it does the same. The right-click menu saves
   without a popup; it draws a small message on the page (`lib/toast.ts`, injected with `scripting` through the menu
   click's `activeTab`, in a closed shadow root) and shows ✓ or ! on the toolbar button for 4 s. A first install opens the connect page.
+- **The shortcut is shown (decided 2026-10-12; built):** the toolbar button's tooltip names it ("Save to StashMine
+  (Alt+Shift+S)", `lib/shortcut.ts`), read from `commands.getAll()` each time the background starts (and on Firefox's
+  `commands.onChanged`), so a shortcut changed in the browser's settings shows too. The background keeps it in
+  storage for the content script, which can't read commands, and the `connected` message carries it so the web
+  app's connect page can say "press Alt+Shift+S on any page". `null` when the person removed the shortcut.
 - **Server per build (decided 2026-10-04; built):** development builds save to `http://localhost:5173`, others to
   `https://stashmine.app`, `WXT_SERVER_URL` overrides (`lib/server.ts`); host permission, the content script's
   `matches` and the API calls all follow it, and a stored key is used only on the server it was made on.
@@ -68,14 +73,15 @@ source of truth; read it rather than guessing. The original plan is in `../apps/
   | extension → page, at load and on every ping | `{ source: 'stashmine-extension', type: 'hello', protocol: 1, browser: 'chrome'\|'edge'\|'firefox'\|'safari'\|'other', deviceId: string \| null }` |
   | page → extension | `{ source: 'stashmine-web', type: 'ping' }` |
   | page → extension | `{ source: 'stashmine-web', type: 'connect', token, deviceId, username, server }` |
-  | extension → page, once the token is stored | `{ source: 'stashmine-extension', type: 'connected', deviceId }` |
+  | extension → page, once the token is stored | `{ source: 'stashmine-extension', type: 'connected', deviceId, shortcut }` |
   | page → extension, on sign-out | `{ source: 'stashmine-web', type: 'disconnect', deviceId }` |
   | extension → page | `{ source: 'stashmine-extension', type: 'disconnected', deviceId }` |
 
   Accept a message only when `event.source === window`, `event.origin` is our origin and the shape matches; post
   with `targetOrigin` set to our origin, never `'*'`. `deviceId` in the hello is the device the extension was
   connected with before (the page removes it once the new one is confirmed); `server` is the origin the token
-  belongs to, so the extension saves there. The page waits 3 s for a hello and 8 s for `connected`, and removes
+  belongs to, so the extension saves there. `shortcut` in `connected` is the save shortcut as the browser shows it, or null (added
+  without bumping `protocol`: the page treats it as optional). The page waits 3 s for a hello and 8 s for `connected`, and removes
   the new token if it doesn't come. A change to these messages bumps `protocol` on both sides. Guests are asked to
   sign in on the page. The token shows in the web app's Settings → Devices and is revocable there; it counts toward
   the 10 devices of an account.

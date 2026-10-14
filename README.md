@@ -11,6 +11,7 @@ decisions and conventions are in [`CLAUDE.md`](CLAUDE.md).
 |---|---|
 | Toolbar button, or **Alt+Shift+S** | The popup opens and saves the current tab right away: **Saved**, **Already in your saves**, a plan limit, or an error with **Try again** |
 | Right-click → **Save page to StashMine** / **Save link to StashMine** | Saves without opening anything; a small **Saved** (or the error) appears in the page's bottom-right corner for 3.5 seconds, and the toolbar button shows ✓ or ! for 4 |
+| Hovering the toolbar button | The tooltip names the shortcut: **Save to StashMine (Alt+Shift+S)**, or whatever it was changed to in the browser's shortcut settings |
 | First install | Opens `stashmine.app/#/connect-extension` to connect the account |
 | Not connected (or the key was removed in Settings → Devices) | The popup offers **Connect**; a right-click save opens the connect page |
 
@@ -56,7 +57,7 @@ The server decides the host permission, where the connect content script runs, a
 
 ```
 entrypoints/
-├── background.ts        ← right-click menu, the badge, the connect page on first install
+├── background.ts        ← right-click menu, the badge, the shortcut in the tooltip, the connect page on first install
 ├── connect.content.ts   ← runs on our site only: receives the key from #/connect-extension and stores it
 └── popup/               ← the toolbar button's popup: saves the current tab and says how it went
 lib/
@@ -66,6 +67,7 @@ lib/
 ├── save.ts              ← saves to the connected account; forgets a key the server no longer knows
 ├── urls.ts              ← which tabs can be saved (web pages only)
 ├── toast.ts             ← the message a right-click save draws on the page (self-contained, injected)
+├── shortcut.ts          ← the save shortcut as the browser shows it (tooltip, and the connect page's "connected")
 ├── server.ts, config.ts ← the build's server and its match pattern
 └── i18n.ts              ← texts from public/_locales
 public/
