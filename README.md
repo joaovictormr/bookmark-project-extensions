@@ -89,18 +89,12 @@ for it with an **Allow** button.
 
 ## Not built yet
 
-- **Tried by hand in a browser:** the connect flow, saving, the badge and the Firefox permission prompt have only been
-  checked by the tests and the builds so far. Firefox's `event.source === window` check in the content script in
-  particular needs a real run.
-- **Safari:** on iPhone and iPad it ships inside the main repo's iOS app (its `SafariExtension` target, filled by
-  `pnpm safari:sync` in `../apps/mobile`, since 2026-10-11); not run in Safari yet. The Mac is open. Tried 2026-10-04
-  (Xcode 26.6):
-  `pnpm build:safari`, then `xcrun safari-web-extension-packager .output/safari-mv3 --app-name StashMine
-  --bundle-identifier … --swift --copy-resources` makes an Xcode project (a Mac app and an iPhone app, each with the
-  extension inside), and both compiled unsigned. Not run in Safari yet, and where the project lives is open
-  (`CLAUDE.md` → Open questions).
-- **Stores** (required for launch; the extension goes public in all three stores the same day as the website and
-  the iPhone app, `CLAUDE.md` → Decisions): listings, screenshots, the privacy policy link (`https://stashmine.app/privacy`, which covers the
+- **Safari on the Mac:** needs its own small Mac app (`CLAUDE.md` → Open questions); not built. Safari on iPhone and
+  iPad ships inside the main repo's iPhone app (`pnpm safari:sync` in `apps/mobile` copies this build there), and was
+  tried on an iPhone on 2026-10-11.
+- **Stores** (required for launch; Chrome and Firefox go public with the website, Safari with the iPhone app,
+  `CLAUDE.md` → Decisions). The listings, permission reasons, data disclosures and reviewer notes are drafted in
+  [`STORE_LISTING.md`](STORE_LISTING.md) (2026-10-18); left: screenshots, and submitting. Each store needs: listings, screenshots, the privacy policy link (`https://stashmine.app/privacy`, which covers the
   extension) and a reason for each permission. The Firefox build already declares what it sends
   (`data_collection_permissions`: `browsingActivity` and `websiteContent`, which needs Firefox 140, or 142 on Android);
   `pnpm lint:firefox` runs Mozilla's store linter on it. `pnpm zip` / `pnpm zip:firefox` make the uploads (Firefox
