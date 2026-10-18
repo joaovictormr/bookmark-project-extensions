@@ -20,6 +20,12 @@ does: when a feature or a permission changes, check it here too.
 - Limits: Chrome's summary is the manifest's `extDescription` (132 characters), its description up to 16,000; AMO's
   summary 250.
 
+## When to submit
+
+After the quiet launch (decided 2026-10-18): the Coming soon page is removed without an announcement, then both are
+submitted, since reviewers must sign in and connect on the real site. Chrome usually takes 1–3 days, Firefox often
+hours. The launch is announced once both are approved.
+
 ## Shared fields
 
 | Field | Value |

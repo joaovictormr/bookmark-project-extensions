@@ -134,6 +134,9 @@ Safari through the App Store; Microsoft Edge Add-ons (free) is optional. Each ne
 (`https://stashmine.app/privacy`) and a reason for every permission. Submit Chrome and Firefox early enough that their reviews
 are done before launch day, and keep each approved version from going public until the website does (check each
 store's option for holding an approved release). Safari is submitted with the iPhone app after the website is live.
+**Revised 2026-10-18 (a quiet launch):** reviewers must connect on the real site, which the Coming soon page blocks,
+so the website goes up a few days early without an announcement, Chrome and Firefox are submitted then, and the
+launch is announced once both are approved.
 
 ## Open questions
 
