@@ -17,6 +17,9 @@
   "menuSaveLink": {
     "message": "Salvar link no StashMine"
   },
+  "menuSavePicture": {
+    "message": "Salvar imagem no StashMine"
+  },
   "cantSaveThisPage": {
     "message": "Esta página não pode ser salva"
   },
@@ -25,6 +28,18 @@
   },
   "alreadySaved": {
     "message": "Já está nos seus salvos"
+  },
+  "pictureSaved": {
+    "message": "Imagem salva"
+  },
+  "pictureAlreadySaved": {
+    "message": "Esta imagem já está nos seus salvos"
+  },
+  "pictureUnreadable": {
+    "message": "Não foi possível ler esta imagem"
+  },
+  "pictureTooLarge": {
+    "message": "Esta imagem é grande demais para salvar"
   },
   "couldntReach": {
     "message": "Não foi possível falar com o StashMine. Verifique sua conexão e tente de novo."

@@ -30,6 +30,15 @@ source of truth; read it rather than guessing. The original plan is in `../apps/
   click); the keyboard shortcut (Alt+Shift+S) is `_execute_action`, so it does the same. The right-click menu saves
   without a popup; it draws a small message on the page (`lib/toast.ts`, injected with `scripting` through the menu
   click's `activeTab`, in a closed shadow root) and shows ✓ or ! on the toolbar button for 4 s. A first install opens the connect page.
+- **Saving pictures (decided and built 2026-10-19):** right-click a picture → **Save picture to StashMine** makes an
+  image save (Pro and Team; the main repo's `CLAUDE.md` → Image saves) through `POST /api/share/image`, as the iPhone
+  share extension does; other plans get the server's message. The server takes a JPEG and nothing else, so
+  `lib/picture.ts` shrinks it first like the web app (within 1,600 × 4,000 px, white behind transparency, 3 MB at
+  most). The picture's own file is downloaded when its server allows an extension to read it (YouTube, X and Amazon
+  do; Pinterest and Google don't, and `activeTab` covers the page's own address only); otherwise it's cut out of a
+  capture of the visible tab (`tabs.captureVisibleTab`, allowed by the menu click's `activeTab`), so only what shows
+  on screen is saved, and only the crop is sent. No new permission. Pictures inside a frame, and sites that cover
+  their pictures (Instagram), don't offer the menu or can't be found: save the page instead.
 - **The shortcut is shown (decided 2026-10-12; built):** the toolbar button's tooltip names it ("Save to StashMine
   (Alt+Shift+S)", `lib/shortcut.ts`), read from `commands.getAll()` each time the background starts (and on Firefox's
   `commands.onChanged`), so a shortcut changed in the browser's settings shows too. The background keeps it in
@@ -40,7 +49,8 @@ source of truth; read it rather than guessing. The original plan is in `../apps/
   `matches` and the API calls all follow it, and a stored key is used only on the server it was made on.
 - **Manifest V3 for Firefox too** (`manifestVersion: 3` in `wxt.config.ts`; WXT would build V2), Firefox 140+ (142 on
   Android), because the Firefox build declares the data it sends, as Firefox Add-ons requires of new extensions:
-  `data_collection_permissions.required: ['browsingActivity', 'websiteContent']` (a saved page's address and title).
+  `data_collection_permissions.required: ['browsingActivity', 'websiteContent']` (a saved page's address and title, and
+  a picture the person saves, which `websiteContent` covers).
   Change it whenever the extension starts sending anything else, and the main repo's privacy policy with it.
 - **The popup uses the web app's light palette**, the app's default theme.
 - **Safari on iPhone and iPad ships inside the main repo's iOS app (decided and built 2026-10-11).** A
@@ -62,8 +72,8 @@ source of truth; read it rather than guessing. The original plan is in `../apps/
   `429` = rate limited (`Retry-After`), errors are `{ error: { code, message } }` with `message` already in the
   language of `Accept-Language`. `limit_reached` responses carry an `upgrade` hint; show the message and link to the
   web app, never an in-extension purchase.
-- **Three ways to save:** toolbar button, right-click "Save to StashMine" (page and links), and a keyboard shortcut
-  (`commands`). All three grant `activeTab`, so the extension never needs to read every site.
+- **Three ways to save:** toolbar button, right-click "Save to StashMine" (page, link and picture), and a keyboard
+  shortcut (`commands`). All three grant `activeTab`, so the extension never needs to read every site.
 - **Connecting the account (no cookies):** the extension opens `https://stashmine.app/#/connect-extension`. A content
   script that runs **only** on `https://stashmine.app/*` talks to that page with `window.postMessage` on the same
   window (the page's side is `../apps/web/src/lib/extensionBridge.ts`, which is the source of truth for the format):
@@ -89,11 +99,12 @@ source of truth; read it rather than guessing. The original plan is in `../apps/
   key on the server, then sends `disconnect`; the extension forgets its key only if the `deviceId` matches. Added
   without bumping `protocol`: an older extension ignores it and forgets the key on its next save (401).
 - **Token hygiene:** the token never goes into a log, an error, the popup's DOM or any request other than
-  `/api/share`. Signing out of the extension forgets it locally (the web app's Devices list revokes it for real).
+  `/api/share` and `/api/share/image`. Signing out of the extension forgets it locally (the web app's Devices list revokes it for real).
 
 ## Permissions (keep them minimal; every one needs a justification in the stores)
 
-- `activeTab`, `contextMenus`, `scripting` (the right-click save's message on the page), `storage`. No
+- `activeTab`, `contextMenus`, `scripting` (the right-click save's message on the page, and finding a right-clicked
+  picture on it), `storage`. No
   `notifications`: the on-page message does the job without another permission.
 - Host permission only for `https://stashmine.app/*` (the API calls and the connect content script). Never
   `<all_urls>` or broad host permissions: they trigger scary install warnings and slower store reviews.

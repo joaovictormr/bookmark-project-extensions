@@ -17,6 +17,9 @@
   "menuSaveLink": {
     "message": "Save link to StashMine"
   },
+  "menuSavePicture": {
+    "message": "Save picture to StashMine"
+  },
   "cantSaveThisPage": {
     "message": "This page can't be saved"
   },
@@ -25,6 +28,18 @@
   },
   "alreadySaved": {
     "message": "Already in your saves"
+  },
+  "pictureSaved": {
+    "message": "Picture saved"
+  },
+  "pictureAlreadySaved": {
+    "message": "This picture is already in your saves"
+  },
+  "pictureUnreadable": {
+    "message": "Couldn't read this picture"
+  },
+  "pictureTooLarge": {
+    "message": "This picture is too large to save"
   },
   "couldntReach": {
     "message": "Couldn't reach StashMine. Check your connection and try again."

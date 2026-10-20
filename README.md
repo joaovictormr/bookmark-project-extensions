@@ -11,6 +11,7 @@ decisions and conventions are in [`CLAUDE.md`](CLAUDE.md).
 |---|---|
 | Toolbar button, or **Alt+Shift+S** | The popup opens and saves the current tab right away: **Saved**, **Already in your saves**, a plan limit, or an error with **Try again** |
 | Right-click → **Save page to StashMine** / **Save link to StashMine** | Saves without opening anything; a small **Saved** (or the error) appears in the page's bottom-right corner for 3.5 seconds, and the toolbar button shows ✓ or ! for 4 |
+| Right-click a picture → **Save picture to StashMine** | An image save (Pro and Team; other plans get the server's "comes with Pro"): the picture is downloaded, or cut out of the visible tab when its site doesn't allow that, shrunk to a JPEG and sent to `POST /api/share/image`. The button shows … while it uploads, then **Picture saved** in the corner |
 | Hovering the toolbar button | The tooltip names the shortcut: **Save to StashMine (Alt+Shift+S)**, or whatever it was changed to in the browser's shortcut settings |
 | First install | Opens `stashmine.app/#/connect-extension` to connect the account |
 | Not connected (or the key was removed in Settings → Devices) | The popup offers **Connect**; a right-click save opens the connect page |
@@ -63,7 +64,8 @@ entrypoints/
 lib/
 ├── bridge.ts            ← the messages with the web app's connect page (mirrors apps/web/src/lib/extensionBridge.ts)
 ├── connection.ts        ← the stored key, account and server (browser.storage.local)
-├── share.ts             ← POST /api/share and what its answers mean
+├── share.ts             ← POST /api/share (and /api/share/image for a picture) and what their answers mean
+├── picture.ts           ← a right-clicked picture: downloaded or cut out of the tab, shrunk to a JPEG
 ├── save.ts              ← saves to the connected account; forgets a key the server no longer knows
 ├── urls.ts              ← which tabs can be saved (web pages only)
 ├── toast.ts             ← the message a right-click save draws on the page (self-contained, injected)
@@ -82,8 +84,10 @@ decides what happens to data gets tests; the popup and background are thin wirin
 
 ## Permissions
 
-`activeTab` (the current tab's address, only when you click, use the shortcut or the menu), `contextMenus`, `storage`,
-`scripting` (to draw a right-click save's message on that one tab; no install warning),
+`activeTab` (the current tab's address, only when you click, use the shortcut or the menu; for a right-clicked picture
+its site won't let the extension download, also a capture of that tab, of which only the picture is kept), `contextMenus`,
+`storage`, `scripting` (to draw a right-click save's message on that one tab, and to find a right-clicked picture's place
+on it; no install warning),
 and host access to the build's server only. Firefox can leave the host access off at install; the popup then asks
 for it with an **Allow** button.
 
