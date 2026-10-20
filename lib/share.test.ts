@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { saveLink } from './share'
+import { saveLink, savePicture } from './share'
 
 function respond(status: number, body: unknown) {
   return vi.fn(async () => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } }))
@@ -43,5 +43,31 @@ describe('saveLink', () => {
     expect(await saveLink({ ...base, fetch: respond(400, { error: { code: 'invalid_url', message: 'Bad link' } }) })).toEqual({ kind: 'error', message: 'Bad link' })
     expect(await saveLink({ ...base, fetch: vi.fn(async () => new Response('<html>', { status: 502 })) })).toEqual({ kind: 'error', message: null })
     expect(await saveLink({ ...base, fetch: vi.fn(async () => Promise.reject(new TypeError('Failed to fetch'))) })).toEqual({ kind: 'error', message: null })
+  })
+})
+
+describe('savePicture', () => {
+  const picture = new Blob(['jpeg'], { type: 'image/jpeg' })
+
+  it('posts the picture as a form with the key, without cookies, in the browser’s language', async () => {
+    const fetch = respond(201, { item: { title: 'Picture' }, duplicate: false })
+    expect(await savePicture({ server: base.server, token: base.token, picture, language: 'pt-BR', fetch })).toEqual({ kind: 'saved', title: 'Picture' })
+    const [url, init] = fetch.mock.calls[0] as unknown as [string, RequestInit]
+    expect(url).toBe('https://stashmine.app/api/share/image')
+    expect(init.method).toBe('POST')
+    expect(init.credentials).toBe('omit')
+    // The browser writes the form's Content-Type, with its boundary.
+    expect(init.headers).toEqual({ Authorization: 'Bearer stw_key', 'Accept-Language': 'pt-BR' })
+    const file = (init.body as FormData).get('file') as File
+    expect(file.name).toBe('picture.jpg')
+    expect(file.size).toBe(picture.size)
+  })
+
+  it('tells a picture already saved apart, and passes on the plan’s refusal', async () => {
+    const args = { server: base.server, token: base.token, picture, language: 'en' }
+    expect(await savePicture({ ...args, fetch: respond(200, { item: { title: 'Old' }, duplicate: true }) })).toEqual({ kind: 'duplicate', title: 'Old' })
+    const pro = respond(403, { error: { code: 'limit_reached', message: 'Saving screenshots and photos comes with Pro.' } })
+    expect(await savePicture({ ...args, fetch: pro })).toEqual({ kind: 'limit', message: 'Saving screenshots and photos comes with Pro.' })
+    expect(await savePicture({ ...args, fetch: respond(401, {}) })).toEqual({ kind: 'unauthorized' })
   })
 })

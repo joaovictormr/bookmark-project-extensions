@@ -61,18 +61,18 @@ Then once more in Portuguese for the Portuguese listing (both stores take screen
 
 | Permission | Reason |
 |---|---|
-| Single purpose | Saves the page the user is on (or a link they right-click) to their StashMine account, so they can find it again later. |
-| `activeTab` | Reads the current tab's address and title, only when the user clicks the toolbar button, presses the shortcut or picks "Save to StashMine" in the right-click menu, to save that page. |
-| `contextMenus` | Adds "Save page to StashMine" and "Save link to StashMine" to the right-click menu. |
-| `scripting` | After a right-click save, shows a small "Saved" message in that one tab (limited by `activeTab`). Nothing else runs on pages. |
+| Single purpose | Saves the page the user is on (or a link or picture they right-click) to their StashMine account, so they can find it again later. |
+| `activeTab` | Reads the current tab's address and title, only when the user clicks the toolbar button, presses the shortcut or picks "Save to StashMine" in the right-click menu, to save that page. When the user right-clicks a picture whose site doesn't let the extension download it, captures that tab once and keeps only the picture's part of it, to save that picture. |
+| `contextMenus` | Adds "Save page to StashMine", "Save link to StashMine" and "Save picture to StashMine" to the right-click menu. |
+| `scripting` | After a right-click save, shows a small "Saved" message in that one tab, and for a right-clicked picture finds where it is on the page (both limited by `activeTab`). Nothing else runs on pages. |
 | `storage` | Keeps the key that connects this browser to the user's account, and the account's @username, in the extension's local storage. |
-| Host permission `https://stashmine.app/*` | Our own site only: sends the page to save to `https://stashmine.app/api/share`, and receives the key from the account page `stashmine.app/#/connect-extension` when the user connects. No other site is accessed. |
+| Host permission `https://stashmine.app/*` | Our own site only: sends the page to save to `https://stashmine.app/api/share` (a picture to `/api/share/image`), and receives the key from the account page `stashmine.app/#/connect-extension` when the user connects. No other site is accessed. |
 | Remote code | No. Everything runs from the extension's own files. |
 
 ## Data disclosures
 
 **Chrome → Privacy practices → Data usage.** Tick **Web history** (the address of a page the user chooses to save)
-and **Website content** (its title). Nothing else: no personal or financial information, health, location,
+and **Website content** (its title, or a picture the user chooses to save). Nothing else: no personal or financial information, health, location,
 communications or activity tracking. The extension doesn't read passwords or what's typed on pages.
 
 Then certify all three: the data isn't sold to third parties, isn't used or transferred for purposes unrelated to the
@@ -93,11 +93,13 @@ To test:
 2. Sign in there with any email address: a 6-digit code arrives by email. Google and Apple sign-in work too.
 3. The page says "Ready!" and the extension is connected.
 4. Open any article and click the StashMine button (or press Alt+Shift+S): the popup says "Saved". Right-click a
-   link and pick "Save link to StashMine": a "Saved" message appears in the corner of the page.
+   link and pick "Save link to StashMine": a "Saved" message appears in the corner of the page. Right-click a picture
+   and pick "Save picture to StashMine": saving pictures is part of the paid plan, so a free account gets a message
+   saying so.
 5. The saves appear at https://stashmine.app.
 
-The extension only talks to https://stashmine.app. It sends the address and title of a page only when you choose to
-save it. The connection key is created by the signed-in website and can be removed in Settings → Devices.
+The extension only talks to https://stashmine.app. It sends the address and title of a page, or a picture, only when
+you choose to save it. The connection key is created by the signed-in website and can be removed in Settings → Devices.
 ```
 
 **AMO also wants the source code**, because the build is bundled: upload the zip from `pnpm zip:firefox` (it makes
@@ -126,7 +128,8 @@ pile of open tabs, bookmarks or a chat with yourself.
 
 SAVE IN ONE CLICK
 Click the StashMine button and the page you're on is saved. Press Alt+Shift+S to do the same from the keyboard, or
-right-click any link and pick "Save link to StashMine" to save it without opening it.
+right-click any link and pick "Save link to StashMine" to save it without opening it. With Pro, right-click a picture
+to save the picture itself.
 
 IT FILLS ITSELF IN
 Every save gets its title, picture and author. StashMine adds a short summary, a category and tags, so you know what
@@ -160,7 +163,8 @@ abas abertas, favoritos ou numa conversa com você mesmo.
 
 SALVE COM UM CLIQUE
 Clique no botão do StashMine e a página em que você está é salva. Aperte Alt+Shift+S para fazer o mesmo pelo teclado,
-ou clique com o botão direito em qualquer link e escolha "Salvar link no StashMine" para salvar sem abrir.
+ou clique com o botão direito em qualquer link e escolha "Salvar link no StashMine" para salvar sem abrir. Com o Pro,
+clique com o botão direito numa imagem para salvar a própria imagem.
 
 ELE SE PREENCHE SOZINHO
 Cada link salvo ganha título, imagem e autor. O StashMine adiciona um resumo curto, uma categoria e tags, para você

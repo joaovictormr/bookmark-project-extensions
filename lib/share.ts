@@ -33,15 +33,48 @@ export async function saveLink({
   language: string
   fetch?: typeof globalThis.fetch
 }): Promise<SaveResult> {
+  return send(fetch, `${server}/api/share`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}`, 'Accept-Language': language },
+    body: JSON.stringify(title ? { url, title: title.slice(0, 1000) } : { url }),
+    // The key is the only credential: never the site's cookies.
+    credentials: 'omit',
+  })
+}
+
+/**
+ * Saves a picture (a JPEG from lib/picture.ts) through `POST /api/share/image`, a multipart form with one `file`, an
+ * image save. The server checks the plan (Pro and Team) and the picture; its answers read like `/api/share`'s.
+ */
+export async function savePicture({
+  server,
+  token,
+  picture,
+  language,
+  fetch = globalThis.fetch,
+}: {
+  server: string
+  token: string
+  picture: Blob
+  language: string
+  fetch?: typeof globalThis.fetch
+}): Promise<SaveResult> {
+  const form = new FormData()
+  form.append('file', new File([picture], 'picture.jpg', { type: 'image/jpeg' }))
+  // No Content-Type: fetch writes the form's own, with its boundary.
+  return send(fetch, `${server}/api/share/image`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}`, 'Accept-Language': language },
+    body: form,
+    credentials: 'omit',
+  })
+}
+
+/** Sends a save and turns the server's answer into a SaveResult. A network failure is an error with no message. */
+async function send(fetch: typeof globalThis.fetch, url: string, init: RequestInit): Promise<SaveResult> {
   let res: Response
   try {
-    res = await fetch(`${server}/api/share`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}`, 'Accept-Language': language },
-      body: JSON.stringify(title ? { url, title: title.slice(0, 1000) } : { url }),
-      // The key is the only credential: never the site's cookies.
-      credentials: 'omit',
-    })
+    res = await fetch(url, init)
   } catch {
     return { kind: 'error', message: null }
   }
